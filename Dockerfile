@@ -12,6 +12,10 @@ COPY package.json yarn.lock ./
 COPY .eslintrc.js tsconfig.json tsconfig.build.json ./
 RUN yarn install --ignore-scripts
 
+# Solve the problem with bcrypt
+RUN yarn remove bcrypt
+RUN yarn add bcrypt
+
 # Copy source code
 COPY src /app/src
 
