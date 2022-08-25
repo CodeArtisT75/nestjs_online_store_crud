@@ -9,7 +9,7 @@ import {
   UseGuards
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBasicAuth, ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { HttpResponseContract } from '../../../lib/contracts/HttpResponseContract';
 import { ApiResponseContract } from '../../../lib/decorators/api-response-contract.decorator';
 import { AuthService } from '../services/auth.service';
@@ -49,6 +49,7 @@ export class AuthController {
     };
   }
 
+  @ApiBasicAuth()
   @ApiResponseContract({ model: AccessTokenResponseDto })
   @UseGuards(AuthGuard('local'))
   @HttpCode(HttpStatus.OK)
@@ -65,6 +66,7 @@ export class AuthController {
     };
   }
 
+  @ApiBearerAuth()
   @ApiResponseContract({ model: User })
   @UseGuards(AuthGuard('jwt'))
   @Get('/user')

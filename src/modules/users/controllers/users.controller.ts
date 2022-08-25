@@ -12,7 +12,7 @@ import {
   UseGuards,
   HttpStatus
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { HttpResponseContract } from '../../../lib/contracts/HttpResponseContract';
 import { UsersService } from '../services/users.service';
@@ -22,6 +22,7 @@ import { ApiResponseContract } from '../../../lib/decorators/api-response-contra
 import { User } from '../entities/user.entity';
 
 @ApiTags('Users')
+@ApiBearerAuth()
 @Controller('api/v1/users')
 @UseGuards(AuthGuard('jwt'))
 export class UsersController {

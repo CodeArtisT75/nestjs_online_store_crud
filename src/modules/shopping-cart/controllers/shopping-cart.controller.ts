@@ -10,7 +10,7 @@ import {
   Post,
   UseGuards
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiResponseContract } from '../../../lib/decorators/api-response-contract.decorator';
 import { HttpResponseContract } from '../../../lib/contracts/HttpResponseContract';
@@ -22,6 +22,7 @@ import { ProductsService } from '../../products/services/products.service';
 import { ShoppingCart } from '../entities/shopping-cart.entity';
 
 @ApiTags('Shopping Cart')
+@ApiBearerAuth()
 @Controller('api/v1/cart')
 @UseGuards(AuthGuard('jwt'))
 export class ShoppingCartController {

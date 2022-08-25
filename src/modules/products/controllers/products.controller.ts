@@ -12,7 +12,7 @@ import {
   UseGuards,
   HttpStatus
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiResponseContract } from '../../../lib/decorators/api-response-contract.decorator';
 import { HttpResponseContract } from '../../../lib/contracts/HttpResponseContract';
@@ -22,6 +22,7 @@ import { UpdateProductDto } from '../dto/update-product.dto';
 import { Product } from '../entities/product.entity';
 
 @ApiTags('Products')
+@ApiBearerAuth()
 @Controller('api/v1/products')
 @UseGuards(AuthGuard('jwt'))
 export class ProductsController {
