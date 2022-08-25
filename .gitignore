@@ -29,7 +29,9 @@ lerna-debug.log*
 
 # IDE - VSCode
 .vscode/*
-.idea
 
 # Env files
 .env
+
+# db_schema backup file
+/docs/db-schema/*.dbs.bak

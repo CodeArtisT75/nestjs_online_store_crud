@@ -3,6 +3,9 @@ version: '3'
 networks:
   backend:
 
+volumes:
+  app-pg-data:
+
 services:
   app:
     build:
@@ -17,5 +20,38 @@ services:
     working_dir: /app
     networks:
       - backend
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:13.3-alpine
+    container_name: app-postgres-db
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "${DB_PORT}:${DB_PORT}"
+    volumes:
+      - app-pg-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      PGDATA: /var/lib/postgresql/data
+    networks:
+      - backend
+    env_file:
+      - .env
+
+  yarn:
+    image: node:16.14.0-alpine
+    container_name: app-yarn
+    volumes:
+      - ./src:/app
+    working_dir: /app
+    networks:
+      - backend
+    entrypoint: [ 'yarn' ]
     env_file:
       - .env

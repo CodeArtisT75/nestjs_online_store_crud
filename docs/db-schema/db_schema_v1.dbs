@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="online_store_db_v1" id="Project_1ac4" database="PostgreSQL" >
+	<schema name="online_store_db_v1" >
+		<table name="products" prior="tbl" >
+			<column name="id" type="bigint" jt="-5" mandatory="y" />
+			<column name="name" type="varchar" length="255" jt="12" mandatory="y" />
+			<column name="description" type="varchar" length="255" jt="12" />
+			<column name="quantity" type="integer" jt="4" mandatory="y" >
+				<defo><![CDATA[0]]></defo>
+			</column>
+			<column name="price" type="decimal" jt="3" mandatory="y" >
+				<defo><![CDATA[0]]></defo>
+			</column>
+			<column name="created_at" type="timestamp" jt="93" />
+			<column name="updated_at" type="timestamp" jt="93" />
+			<index name="pk_products_id" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="shopping_carts" prior="tbl" >
+			<column name="id" type="bigint" jt="-5" mandatory="y" />
+			<column name="user_id" type="bigint" jt="-5" mandatory="y" />
+			<column name="product_id" type="bigint" jt="-5" mandatory="y" />
+			<column name="count" type="integer" jt="4" mandatory="y" >
+				<defo><![CDATA[0]]></defo>
+			</column>
+			<column name="created_at" type="timestamp" jt="93" />
+			<index name="pk_shopping_carts_id" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_shopping_carts_products" to_schema="online_store_db_v1" to_table="products" delete_action="restrict" >
+				<fk_column name="product_id" pk="id" />
+			</fk>
+			<fk name="fk_shopping_carts_users" to_schema="online_store_db_v1" to_table="users" delete_action="cascade" >
+				<fk_column name="user_id" pk="id" />
+			</fk>
+		</table>
+		<table name="users" prior="tbl" >
+			<column name="id" type="bigint" jt="-5" mandatory="y" />
+			<column name="username" type="varchar" length="100" jt="12" mandatory="y" />
+			<column name="password" type="varchar" length="255" jt="12" mandatory="y" />
+			<column name="name" type="varchar" length="100" jt="12" />
+			<column name="role" type="varchar" jt="12" mandatory="y" />
+			<column name="created_at" prior="createdat" type="timestamp" jt="93" />
+			<column name="updated_at" type="timestamp" jt="93" />
+			<index name="pk_users_id" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+	</schema>
+	<layout name="Default Layout" id="Layout_265" show_relation="columns" >
+		<entity schema="online_store_db_v1" name="products" color="C1D8EE" x="272" y="288" />
+		<entity schema="online_store_db_v1" name="shopping_carts" color="C1D8EE" x="48" y="304" />
+		<entity schema="online_store_db_v1" name="users" color="C1D8EE" x="48" y="48" />
+	</layout>
+</project>
