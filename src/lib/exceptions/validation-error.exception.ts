@@ -3,6 +3,6 @@ import { ValidationError } from 'class-validator';
 
 export class ValidationErrorException extends HttpException {
   constructor(error: { message: string; errors: ValidationError[] }) {
-    super(error, HttpStatus.BAD_REQUEST);
+    super(error, HttpStatus.UNPROCESSABLE_ENTITY);
   }
 }
