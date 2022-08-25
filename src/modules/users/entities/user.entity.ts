@@ -12,7 +12,7 @@ import {
 import * as Bcrypt from 'bcrypt';
 import { UserRoles } from '../enums/user-roles.enum';
 
-@Entity()
+@Entity({ name: 'users' })
 export class User {
   @PrimaryGeneratedColumn()
   id: number;

@@ -11,7 +11,7 @@ import { AppService } from './app.service';
 import { UsersModule } from './modules/users/users.module';
 
 @Module({
-  imports: [ConfigModule.forRoot(), TypeOrmModule.forRoot(TypeOrmConfig), UsersModule],
+  imports: [ConfigModule.forRoot(), TypeOrmModule.forRootAsync(TypeOrmConfig), UsersModule],
   controllers: [AppController],
   providers: [
     AppService,
