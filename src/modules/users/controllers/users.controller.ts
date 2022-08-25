@@ -8,17 +8,26 @@ import {
   Delete,
   ParseIntPipe,
   NotFoundException,
-  BadRequestException
+  BadRequestException,
+  UseGuards,
+  HttpStatus
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
 import { HttpResponseContract } from '../../../lib/contracts/HttpResponseContract';
 import { UsersService } from '../services/users.service';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
+import { ApiResponseContract } from '../../../lib/decorators/api-response-contract.decorator';
+import { User } from '../entities/user.entity';
 
+@ApiTags('Users')
 @Controller('api/v1/users')
+@UseGuards(AuthGuard('jwt'))
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @ApiResponseContract({ status: HttpStatus.CREATED, model: User })
   @Post()
   public async create(@Body() createUserDto: CreateUserDto): Promise<HttpResponseContract> {
     const userExists = await this.usersService.findOneByUsername(createUserDto.username);
@@ -36,6 +45,7 @@ export class UsersController {
     };
   }
 
+  @ApiResponseContract({ model: [User] })
   @Get()
   public async findAll(): Promise<HttpResponseContract> {
     const users = await this.usersService.findAll();
@@ -47,6 +57,7 @@ export class UsersController {
     };
   }
 
+  @ApiResponseContract({ model: User })
   @Get(':id')
   public async findOneById(@Param('id', ParseIntPipe) id: number): Promise<HttpResponseContract> {
     const user = await this.usersService.findOneById(id);
@@ -62,6 +73,7 @@ export class UsersController {
     };
   }
 
+  @ApiResponseContract({ model: User })
   @Patch(':id')
   public async update(
     @Param('id', ParseIntPipe) id: number,
@@ -82,6 +94,7 @@ export class UsersController {
     };
   }
 
+  @ApiResponseContract({ model: null })
   @Delete(':id')
   public async remove(@Param('id', ParseIntPipe) id: number): Promise<HttpResponseContract> {
     const user = await this.usersService.findOneById(id);

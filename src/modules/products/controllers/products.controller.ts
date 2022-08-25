@@ -8,17 +8,26 @@ import {
   Delete,
   ParseIntPipe,
   NotFoundException,
-  BadRequestException
+  BadRequestException,
+  UseGuards,
+  HttpStatus
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
+import { ApiResponseContract } from '../../../lib/decorators/api-response-contract.decorator';
 import { HttpResponseContract } from '../../../lib/contracts/HttpResponseContract';
 import { ProductsService } from '../services/products.service';
 import { CreateProductDto } from '../dto/create-product.dto';
 import { UpdateProductDto } from '../dto/update-product.dto';
+import { Product } from '../entities/product.entity';
 
+@ApiTags('Products')
 @Controller('api/v1/products')
+@UseGuards(AuthGuard('jwt'))
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
+  @ApiResponseContract({ status: HttpStatus.CREATED, model: Product })
   @Post()
   public async create(@Body() createProductDto: CreateProductDto): Promise<HttpResponseContract> {
     const product = await this.productsService.create(createProductDto);
@@ -30,6 +39,7 @@ export class ProductsController {
     };
   }
 
+  @ApiResponseContract({ model: [Product] })
   @Get()
   public async findAll(): Promise<HttpResponseContract> {
     const products = await this.productsService.findAll();
@@ -41,6 +51,7 @@ export class ProductsController {
     };
   }
 
+  @ApiResponseContract({ model: Product })
   @Get(':id')
   public async findOne(@Param('id', ParseIntPipe) id: number): Promise<HttpResponseContract> {
     const product = await this.productsService.findOneById(id);
@@ -56,6 +67,7 @@ export class ProductsController {
     };
   }
 
+  @ApiResponseContract({ model: Product })
   @Patch(':id')
   public async update(
     @Param('id', ParseIntPipe) id: number,
@@ -76,6 +88,7 @@ export class ProductsController {
     };
   }
 
+  @ApiResponseContract({ model: null })
   @Delete(':id')
   public async remove(@Param('id', ParseIntPipe) id: number): Promise<HttpResponseContract> {
     const product = await this.productsService.findOneById(id);

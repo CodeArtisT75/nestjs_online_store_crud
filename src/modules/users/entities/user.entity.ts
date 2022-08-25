@@ -10,27 +10,33 @@ import {
   AfterUpdate,
   OneToMany
 } from 'typeorm';
+import { ApiProperty } from '@nestjs/swagger';
 import * as Bcrypt from 'bcrypt';
 import { UserRoles } from '../enums/user-roles.enum';
 import { ShoppingCart } from '../../shopping-cart/entities/shopping-cart.entity';
 
 @Entity({ name: 'users' })
 export class User {
+  @ApiProperty()
   @PrimaryGeneratedColumn()
   id: number;
 
+  @ApiProperty()
   @Column({ unique: true })
   username: string;
 
   @Column({ select: false })
   password: string;
 
+  @ApiProperty()
   @Column()
   name: string;
 
+  @ApiProperty()
   @Column({ type: 'enum', enum: UserRoles, default: UserRoles.CUSTOMER })
   role: string;
 
+  @ApiProperty()
   @CreateDateColumn({
     type: 'timestamp',
     name: 'created_at',
@@ -38,6 +44,7 @@ export class User {
   })
   public createdAt: Date;
 
+  @ApiProperty()
   @UpdateDateColumn({
     type: 'timestamp',
     name: 'updated_at',

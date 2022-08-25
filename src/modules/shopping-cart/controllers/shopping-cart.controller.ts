@@ -3,20 +3,25 @@ import {
   Controller,
   Delete,
   Get,
+  HttpStatus,
   NotFoundException,
   Param,
   ParseIntPipe,
   Post,
   UseGuards
 } from '@nestjs/common';
-import { HttpResponseContract } from '../../../lib/contracts/HttpResponseContract';
+import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiResponseContract } from '../../../lib/decorators/api-response-contract.decorator';
+import { HttpResponseContract } from '../../../lib/contracts/HttpResponseContract';
 import { AuthUser } from '../../../lib/decorators/auth-user.decorator';
 import { ShoppingCartService } from '../services/shopping-cart.service';
 import { User } from '../../users/entities/user.entity';
 import { AddToCartDto } from '../dto/add-to-cart.dto';
 import { ProductsService } from '../../products/services/products.service';
+import { ShoppingCart } from '../entities/shopping-cart.entity';
 
+@ApiTags('Shopping Cart')
 @Controller('api/v1/cart')
 @UseGuards(AuthGuard('jwt'))
 export class ShoppingCartController {
@@ -25,6 +30,7 @@ export class ShoppingCartController {
     private productsService: ProductsService
   ) {}
 
+  @ApiResponseContract({ model: [ShoppingCart] })
   @Get()
   public async getCart(@AuthUser() user: User): Promise<HttpResponseContract> {
     const cart = await this.shoppingCartService.getUserCart(user);
@@ -36,6 +42,7 @@ export class ShoppingCartController {
     };
   }
 
+  @ApiResponseContract({ status: HttpStatus.CREATED, model: null })
   @Post()
   public async addItemToCart(
     @AuthUser() user: User,
@@ -56,6 +63,7 @@ export class ShoppingCartController {
     };
   }
 
+  @ApiResponseContract({ model: null })
   @Delete(':productId')
   public async deleteItemFromCart(
     @Param('productId', ParseIntPipe) productId: number,
