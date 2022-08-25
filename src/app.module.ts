@@ -9,9 +9,15 @@ import { ValidationErrorExceptionFilter } from './lib/filters/validation-error-e
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './modules/users/users.module';
+import { ProductsModule } from './modules/products/products.module';
 
 @Module({
-  imports: [ConfigModule.forRoot(), TypeOrmModule.forRootAsync(TypeOrmConfig), UsersModule],
+  imports: [
+    ConfigModule.forRoot(),
+    TypeOrmModule.forRootAsync(TypeOrmConfig),
+    UsersModule,
+    ProductsModule
+  ],
   controllers: [AppController],
   providers: [
     AppService,

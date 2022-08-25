@@ -8,6 +8,9 @@
 			<column name="quantity" type="integer" jt="4" mandatory="y" >
 				<defo><![CDATA[0]]></defo>
 			</column>
+			<column name="price" type="decimal" jt="3" mandatory="y" >
+				<defo><![CDATA[0]]></defo>
+			</column>
 			<column name="created_at" type="timestamp" jt="93" />
 			<column name="updated_at" type="timestamp" jt="93" />
 			<index name="pk_products_id" unique="PRIMARY_KEY" >
