@@ -17,6 +17,8 @@ async function bootstrap() {
     .addTag('Users')
     .addTag('Products')
     .addTag('Shopping Cart')
+    .addBearerAuth()
+    .addBasicAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/docs', app, document);
