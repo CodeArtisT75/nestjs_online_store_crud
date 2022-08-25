@@ -2,9 +2,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn
 } from 'typeorm';
+import { ShoppingCart } from '../../shopping-cart/entities/shopping-cart.entity';
 
 @Entity({ name: 'products' })
 export class Product {
@@ -37,4 +39,7 @@ export class Product {
     onUpdate: 'CURRENT_TIMESTAMP(6)'
   })
   public updatedAt: Date;
+
+  @OneToMany(_type => ShoppingCart, cart => cart.product)
+  cartItems: Promise<ShoppingCart[]>;
 }

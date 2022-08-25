@@ -7,10 +7,12 @@ import {
   BeforeInsert,
   BeforeUpdate,
   AfterInsert,
-  AfterUpdate
+  AfterUpdate,
+  OneToMany
 } from 'typeorm';
 import * as Bcrypt from 'bcrypt';
 import { UserRoles } from '../enums/user-roles.enum';
+import { ShoppingCart } from '../../shopping-cart/entities/shopping-cart.entity';
 
 @Entity({ name: 'users' })
 export class User {
@@ -56,4 +58,7 @@ export class User {
   async deletePasswordFieldFromModel() {
     delete this.password;
   }
+
+  @OneToMany(_type => ShoppingCart, cart => cart.user)
+  public cartItems: Promise<ShoppingCart[]>;
 }

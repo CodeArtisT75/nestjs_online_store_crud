@@ -11,6 +11,7 @@ import { AppService } from './app.service';
 import { UsersModule } from './modules/users/users.module';
 import { ProductsModule } from './modules/products/products.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { ShoppingCartModule } from './modules/shopping-cart/shopping-cart.module';
 
 @Module({
   imports: [
@@ -18,7 +19,8 @@ import { AuthModule } from './modules/auth/auth.module';
     TypeOrmModule.forRootAsync(TypeOrmConfig),
     UsersModule,
     ProductsModule,
-    AuthModule
+    AuthModule,
+    ShoppingCartModule
   ],
   controllers: [AppController],
   providers: [
