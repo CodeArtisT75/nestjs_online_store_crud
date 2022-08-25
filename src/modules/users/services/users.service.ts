@@ -43,6 +43,14 @@ export class UsersService {
     });
   }
 
+  public async findOneByUsernameWithPassword(username: string): Promise<User> {
+    return this.userRepository
+      .createQueryBuilder('user')
+      .addSelect('user.password')
+      .where('user.username = :username', { username })
+      .getOne();
+  }
+
   public async update(user: User, updateUserDto: UpdateUserDto): Promise<User> {
     return this.userRepository.save(_.merge(user, updateUserDto));
   }
