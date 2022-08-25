@@ -5,12 +5,16 @@ import { UpdateUserDto } from '../dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../entities/user.entity';
 import { UserRepository } from '../repositories/user.repository';
+import { ShoppingCart } from '../../shopping-cart/entities/shopping-cart.entity';
+import { ShoppingCartRepository } from '../../shopping-cart/repositories/shopping-cart.repository';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
-    private userRepository: UserRepository
+    private userRepository: UserRepository,
+    @InjectRepository(ShoppingCart)
+    private shoppingCartRepository: ShoppingCartRepository
   ) {}
 
   public async create(createUserDto: CreateUserDto): Promise<User> {
@@ -57,5 +61,14 @@ export class UsersService {
 
   public async remove(user: User): Promise<void> {
     await this.userRepository.delete({ id: user.id });
+  }
+
+  public async checkUserHasItemsInShoppingCart(user: User): Promise<boolean> {
+    const hasItems = await this.shoppingCartRepository
+      .createQueryBuilder('item')
+      .where('item.user_id = :user_id', { user_id: user.id })
+      .getCount();
+
+    return Boolean(hasItems);
   }
 }

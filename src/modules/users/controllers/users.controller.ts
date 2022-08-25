@@ -90,6 +90,12 @@ export class UsersController {
       throw new NotFoundException('User not found');
     }
 
+    const userHasSomeItemsInCart = await this.usersService.checkUserHasItemsInShoppingCart(user);
+
+    if (userHasSomeItemsInCart) {
+      throw new BadRequestException('User has some items in shopping-cart');
+    }
+
     await this.usersService.remove(user);
 
     return {

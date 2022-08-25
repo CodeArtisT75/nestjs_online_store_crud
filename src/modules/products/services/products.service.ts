@@ -5,12 +5,16 @@ import { UpdateProductDto } from '../dto/update-product.dto';
 import { Product } from '../entities/product.entity';
 import { ProductRepository } from '../repositories/product.repository';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ShoppingCart } from '../../shopping-cart/entities/shopping-cart.entity';
+import { ShoppingCartRepository } from '../../shopping-cart/repositories/shopping-cart.repository';
 
 @Injectable()
 export class ProductsService {
   constructor(
     @InjectRepository(Product)
-    private productRepository: ProductRepository
+    private productRepository: ProductRepository,
+    @InjectRepository(ShoppingCart)
+    private shoppingCartRepository: ShoppingCartRepository
   ) {}
 
   public async create(createProductDto: CreateProductDto): Promise<Product> {
@@ -37,5 +41,14 @@ export class ProductsService {
     await this.productRepository.delete({
       id: product.id
     });
+  }
+
+  public async checkProductHasCartItems(product: Product): Promise<boolean> {
+    const hasItems = await this.shoppingCartRepository
+      .createQueryBuilder('item')
+      .where('item.product_id = :product_id', { product_id: product.id })
+      .getCount();
+
+    return Boolean(hasItems);
   }
 }

@@ -7,7 +7,8 @@ import {
   Param,
   Delete,
   ParseIntPipe,
-  NotFoundException
+  NotFoundException,
+  BadRequestException
 } from '@nestjs/common';
 import { HttpResponseContract } from '../../../lib/contracts/HttpResponseContract';
 import { ProductsService } from '../services/products.service';
@@ -81,6 +82,12 @@ export class ProductsController {
 
     if (!product) {
       throw new NotFoundException('Product not found');
+    }
+
+    const productHasCartItems = await this.productsService.checkProductHasCartItems(product);
+
+    if (productHasCartItems) {
+      throw new BadRequestException('Product has some cart-items');
     }
 
     await this.productsService.remove(product);
