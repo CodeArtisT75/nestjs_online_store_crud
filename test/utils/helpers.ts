@@ -1,6 +1,11 @@
 import 'dotenv/config';
 import * as path from 'path';
+import * as _ from 'lodash';
+import * as request from 'supertest';
 import { DataSource } from 'typeorm';
+import { User } from '../../src/modules/users/entities/user.entity';
+import { INestApplication } from '@nestjs/common';
+import { LoginDto } from '../../src/modules/auth/dto/login.dto';
 
 const TypeOrmDataSource = new DataSource({
   type: 'postgres',
@@ -31,4 +36,36 @@ export async function clearDataBase() {
   } catch (error) {
     throw new Error(`ERROR: Cleaning test db: ${error}`);
   }
+}
+
+export function createUser(): User {
+  const user = new User();
+  user.username = 'user';
+  user.password = '123456';
+  user.name = 'user';
+
+  return user;
+}
+
+export async function storeUserInDatabase(user: User) {
+  try {
+    const dataSource = await TypeOrmDataSource.initialize();
+
+    const repository = await TypeOrmDataSource.getRepository(User);
+    await repository.save(_.cloneDeep(user));
+
+    await dataSource.destroy();
+  } catch (error) {
+    throw new Error(`Can not create user`);
+  }
+}
+
+export async function getJWTTokenForUser(app: INestApplication, user: User): Promise<string> {
+  const loginData: LoginDto = {
+    username: user.username,
+    password: user.password
+  };
+  const response = await request(app.getHttpServer()).post('/api/v1/auth/login').send(loginData);
+
+  return response.body.data.access_token;
 }

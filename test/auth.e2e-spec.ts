@@ -31,7 +31,6 @@ describe('Auth module (e2e)', () => {
   });
 
   afterAll(async () => {
-    await clearDataBase();
     await app.close();
   });
 
