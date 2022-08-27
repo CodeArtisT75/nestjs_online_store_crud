@@ -6,6 +6,7 @@ import { DataSource } from 'typeorm';
 import { User } from '../../src/modules/users/entities/user.entity';
 import { INestApplication } from '@nestjs/common';
 import { LoginDto } from '../../src/modules/auth/dto/login.dto';
+import { Product } from '../../src/modules/products/entities/product.entity';
 
 const TypeOrmDataSource = new DataSource({
   type: 'postgres',
@@ -47,6 +48,16 @@ export function createUser(): User {
   return user;
 }
 
+export function createProduct(): Product {
+  const product = new Product();
+  product.name = 'Food';
+  product.description = 'Food description';
+  product.price = 1000;
+  product.quantity = 100;
+
+  return product;
+}
+
 export async function storeUserInDatabase(user: User) {
   try {
     const dataSource = await TypeOrmDataSource.initialize();
@@ -57,6 +68,21 @@ export async function storeUserInDatabase(user: User) {
     await dataSource.destroy();
   } catch (error) {
     throw new Error(`Can not create user`);
+  }
+}
+
+export async function storeProductInDatabase(product: Product) {
+  try {
+    const dataSource = await TypeOrmDataSource.initialize();
+
+    const repository = await TypeOrmDataSource.getRepository(Product);
+    const _product = await repository.save(product);
+
+    await dataSource.destroy();
+
+    return _product;
+  } catch (error) {
+    throw new Error(`Can not create product`);
   }
 }
 
